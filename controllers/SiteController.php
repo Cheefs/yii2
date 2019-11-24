@@ -125,4 +125,21 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+
+    /**
+     * сохранение посещенных пользователем страниц
+     * @param $action
+     * @param $result
+     * @return mixed
+     */
+    public function afterAction($action, $result) {
+        $session = Yii::$app->session;
+        if ( $session->isActive ) {
+            /** просто фильтрование от действия captcha которое не является страницей */
+            if ( $action->id !== 'captcha' ) {
+                $session->addFlash('prevAction', $action->id );
+            }
+        }
+        return parent::afterAction($action, $result);
+    }
 }

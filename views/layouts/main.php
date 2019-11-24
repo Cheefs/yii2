@@ -63,6 +63,10 @@ AppAsset::register($this);
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
         <?= Alert::widget() ?>
+
+        <!--   просто временный вывод массива посещенных страниц      -->
+        <?php var_dump( Yii::$app->session->get('prevAction') ) ?>
+
         <?= $content ?>
     </div>
 </div>
