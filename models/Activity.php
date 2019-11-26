@@ -23,14 +23,14 @@ use yii\base\Model;
  * @property array $repeatDays   Дни в которые данная задача должна повторятся
 */
 class Activity extends Model {
-    private int $id;
-    private string $from;
-    private string $to;
-    public bool $isRepeatable;
-    public bool $isMain;
-    public string $name;
-    public string $desc;
-    public array $repeatDays = [];
+    private $id;
+    private $from;
+    private $to;
+    public $isRepeatable;
+    public $isMain;
+    public $name;
+    public $desc;
+    public $repeatDays = [];
 
     public function rules() {
         return [

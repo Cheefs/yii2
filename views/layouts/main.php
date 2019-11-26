@@ -64,9 +64,6 @@ AppAsset::register($this);
         ]) ?>
         <?= Alert::widget() ?>
 
-        <!--   просто временный вывод массива посещенных страниц      -->
-        <?php var_dump( Yii::$app->session->get('prevAction') ) ?>
-
         <?= $content ?>
     </div>
 </div>

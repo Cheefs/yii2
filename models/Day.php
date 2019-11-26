@@ -21,10 +21,10 @@ use yii\base\Model;
 class Day extends Model {
     /** данные дни недели будут в базе данных как сущьности этой модели, а тут просто перечень их имен как мок временный*/
     const DAYS_LIST = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    private int $id;
-    public string $name;
-    public bool $isWeekend = false;
-    private array $activityList = [];
+    private $id;
+    public $name;
+    public $isWeekend = false;
+    private $activityList = [];
 
     public function rules() {
         return [
