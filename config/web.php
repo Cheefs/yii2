@@ -47,7 +47,8 @@ $config = [
                 '*' => [
                     'class' => 'yii\i18n\PhpMessageSource',
                     'basePath' => '@app/messages/',
-                    'sourceLanguage' => 'ru-RU'
+                    'language' => 'ru',
+                    'sourceLanguage' => 'ru'
                 ],
             ],
         ],

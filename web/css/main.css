@@ -1,0 +1,10 @@
+.text_bold {
+    font-weight: bold
+}
+
+.day {
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
