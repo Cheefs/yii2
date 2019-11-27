@@ -7,10 +7,11 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 
 ?>
-<h1 class="text-center"><?= Yii::t('app', 'update activity') ?></h1>
+
+<h1 class="text-center"><?= Yii::t('app', 'create new activity') ?></h1>
 <?php $form = ActiveForm::begin([
-    'id' => 'update-form',
-    'options' => ['enctype' => 'multipart/form-data']
+    'id' => 'create-form',
+    'options' => [ 'enctype' => 'multipart/form-data' ]
 ]); ?>
 
 <div class="row">
@@ -30,8 +31,7 @@ use yii\helpers\Url;
                 ->label(false);
             ?>
         </div>
-
-        <?= $form->field($model, 'attachments[]')->fileInput([ 'multiple' => true ]) ?>
+        <?= $form->field($model, 'attachments[]')->fileInput(['multiple' => true ]) ?>
     </div>
 </div>
 

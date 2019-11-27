@@ -3,8 +3,8 @@
 namespace app\models;
 
 use Yii;
-use DateTime;
 use yii\base\Model;
+use yii\web\UploadedFile;
 
 /**
  *
@@ -21,25 +21,27 @@ use yii\base\Model;
  * @property bool $isRepeatable  Повторяется ли это задача каждый день
  * @property string $desc        Описание задачи
  * @property array $repeatDays   Дни в которые данная задача должна повторятся
+ * @property int $dayId          Id дня в календаре на котором создают задачу
 */
 class Activity extends Model {
     public $id;
     public $from;
     public $to;
-    public $isRepeatable;
-    public $isMain;
+    public $isRepeatable = 0;
+    public $isMain = 0;
     public $name;
     public $desc;
     public $repeatDays = [];
-    public $attachments = [];
+    public $attachments;
+    public $dayId;
 
     public function rules() {
         return [
-            [[ 'id' ], 'integer'],
+            [[ 'id', 'dayId' ], 'integer'],
             [[ 'isMain', 'isRepeatable' ], 'boolean'],
             [[ 'from', 'to', 'name', 'desc', 'repeatDays' ], 'safe'],
             [[ 'name', 'isMain', 'from', 'to', 'isRepeatable' ], 'required'],
-            [['attachments'], 'file'],
+            [[ 'attachments' ], 'file', 'maxFiles' => 4],
         ];
     }
 
@@ -53,6 +55,10 @@ class Activity extends Model {
             'isMain' => Yii::t('app', 'is main'),
             'repeatDays' => Yii::t('app', 'repeat days'),
             'isRepeatable' => Yii::t('app', 'is repeatable'),
+            'attachments' => Yii::t('app', 'attachments'),
+            'dayId' => Yii::t('app', 'dayId'),
         ];
     }
+
+
 }

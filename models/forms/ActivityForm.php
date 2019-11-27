@@ -5,16 +5,30 @@ namespace app\models\forms;
 use app\models\Activity;
 use app\models\Day;
 use DateTime;
+use yii\web\UploadedFile;
 
-/** перенес методы в форму, потому что они нужны тут а не в моделе */
+/** перенес методы в форму, потому что они нужны тут а не в моделе  */
 class ActivityForm extends Activity {
+
+    /**
+     * Загрузка файлов
+     */
+    public function saveFiles() {
+        $filesList = UploadedFile::getInstances($this, 'attachments');
+
+        if ($filesList && count($filesList) ) {
+            foreach ($filesList as $file) {
+                $file->saveAs('uploads/' . $file->baseName . '.' . $file->extension);
+            }
+        }
+    }
 
     /**
      * Установить повторение события
      * @param array $days выбранные дни для потвторения
      */
     public function setRepeat(array $days) {
-        $dayModel = new Day();
+        $dayModel = new DayForm();
         $this->isRepeatable = true;
         if ( !count($days) ) {
             $this->repeatDays = $dayModel->getAllDays();
@@ -29,7 +43,7 @@ class ActivityForm extends Activity {
     private function checkAvailableSlot() {
         $isAvailable = true;
         /** тут будет обращение к модели Day и получение дней в границах между $from и $to*/
-        $activityList = ( new Day() )->getActivities();
+        $activityList = ( new DayForm() )->getActivities();
 
         if ( $activityList && is_array($activityList)  && count($activityList)) {
             foreach ( $activityList as $activity ) {
