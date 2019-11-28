@@ -44,12 +44,8 @@ class ActivityController extends Controller {
     public function actionCreate(int $dayId) {
         $model = new ActivityForm();
         $model->dayId = $dayId;
-
         if ( $model->load( \Yii::$app->request->post() ) && $model->validate()) {
-
-            var_dump($_POST); die();
             $model->saveFiles();
-
             return $this->render('submit-debug', [
                 'model' => $model,
             ]);

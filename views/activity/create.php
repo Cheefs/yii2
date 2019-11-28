@@ -32,6 +32,8 @@ use yii\helpers\Url;
             ?>
         </div>
         <?= $form->field($model, 'attachments[]')->fileInput(['multiple' => true ]) ?>
+        <?= $form->field($model, 'attachments[]')->fileInput(['multiple' => true ]) ?>
+        <?= $form->field($model, 'attachments[]')->fileInput(['multiple' => true ]) ?>
     </div>
 </div>
 

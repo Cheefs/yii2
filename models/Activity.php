@@ -22,6 +22,7 @@ use yii\web\UploadedFile;
  * @property string $desc        Описание задачи
  * @property array $repeatDays   Дни в которые данная задача должна повторятся
  * @property int $dayId          Id дня в календаре на котором создают задачу
+ * @property UploadedFile $attachments
 */
 class Activity extends Model {
     public $id;

@@ -30,8 +30,13 @@ use yii\helpers\Url;
                 ->label(false);
             ?>
         </div>
-
-        <?= $form->field($model, 'attachments[]')->fileInput([ 'multiple' => true ]) ?>
+        <!--  Меня сбивал парметр и описания атрибута, я думал yii или php поймет и будет подставлять значения
+              но увы ему нужно рисовать несколько инпутов ( в js c этим нет проблемы когда 1 инпут мб я чегото незнаю )
+              буду рад разбору или совету!!
+              -->
+        <?= $form->field($model, 'attachments[]')->fileInput(['multiple' => true ]) ?>
+        <?= $form->field($model, 'attachments[]')->fileInput(['multiple' => true ]) ?>
+        <?= $form->field($model, 'attachments[]')->fileInput(['multiple' => true ]) ?>
     </div>
 </div>
 

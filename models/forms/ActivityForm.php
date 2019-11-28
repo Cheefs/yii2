@@ -10,18 +10,6 @@ use yii\web\UploadedFile;
 /** перенес методы в форму, потому что они нужны тут а не в моделе  */
 class ActivityForm extends Activity {
 
-    /**
-     * Загрузка файлов
-     */
-    public function saveFiles() {
-        $filesList = UploadedFile::getInstances($this, 'attachments');
-
-        if ($filesList && count($filesList) ) {
-            foreach ($filesList as $file) {
-                $file->saveAs('uploads/' . $file->baseName . '.' . $file->extension);
-            }
-        }
-    }
 
     /**
      * Установить повторение события
@@ -89,4 +77,16 @@ class ActivityForm extends Activity {
         $this->desc = 'ijasoipd asdji asd jasopdij';
     }
 
+    /**
+     * Загрузка файлов
+     */
+    public function saveFiles() {
+        $this->attachments = UploadedFile::getInstances($this, 'attachments');
+        $filesList = $this->attachments;
+        if ( $filesList && count($filesList) ) {
+            foreach ($filesList as $file) {
+                $file->saveAs('uploads/' . $file->baseName . '.' . $file->extension);
+            }
+        }
+    }
 }
