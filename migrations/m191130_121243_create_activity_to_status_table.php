@@ -13,7 +13,7 @@ class m191130_121243_create_activity_to_status_table extends Migration
      */
     public function safeUp()
     {
-        $this->createTable('{{%activity_to_status}}', [
+        $this->createTable('activity_to_status', [
             'activity_id' => $this->integer()->comment('указатель на событие'),
             'status_id' => $this->integer()->comment('указатель на статус'),
             'created_at' => $this->dateTime()
@@ -53,6 +53,6 @@ class m191130_121243_create_activity_to_status_table extends Migration
             'activity_to_status'
         );
 
-        $this->dropTable('{{%activity_to_status}}');
+        $this->dropTable('activity_to_status');
     }
 }

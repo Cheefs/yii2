@@ -13,9 +13,11 @@ class m191130_110208_create_activity_to_users_table extends Migration
      */
     public function safeUp()
     {
-        $this->createTable('{{%activity_to_users}}', [
+        $this->createTable('activity_to_users', [
             'activity_id' => $this->integer()->notNull()->comment('указатель на активность'),
             'user_id' => $this->integer()->notNull()->comment('указатель на пользователя'),
+            'created_at' => $this->timestamp()->comment('дата создания'),
+            'updated_at' => $this->timestamp()->comment('дата редактирования'),
         ]);
         /** внешний ключь для связи с событием */
         $this->addForeignKey(
@@ -50,6 +52,6 @@ class m191130_110208_create_activity_to_users_table extends Migration
             'fk-activity-to-users-user_id',
             'activity_to_users'
         );
-        $this->dropTable('{{%activity_to_users}}');
+        $this->dropTable('activity_to_users');
     }
 }

@@ -12,14 +12,16 @@ class m191130_103534_create_activity_table extends Migration
      */
     public function safeUp()
     {
-        $this->createTable('{{%activity}}', [
+        $this->createTable('activity', [
             'id' => $this->primaryKey(),
             'name' => $this->string()->notNull()->comment('название собития'),
-            'from' => $this->dateTime()->notNull()->comment('дата и время начала собития'),
-            'to' => $this->dateTime()->notNull()->comment('дата и время завершения собития'),
+            'started_at' => $this->timestamp()->notNull()->comment('начало собития'),
+            'finished_at' => $this->timestamp()->notNull()->comment('завершение собития'),
             'is_main' => $this->boolean()->notNull()->defaultValue(false )
                 ->comment('указатель является ли событие основным'),
             'desc' => $this->text(),
+            'created_at' => $this->bigInteger(),
+            'updated_at' => $this->bigInteger()
         ]);
     }
 
@@ -28,6 +30,6 @@ class m191130_103534_create_activity_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('{{%activity}}');
+        $this->dropTable('activity');
     }
 }

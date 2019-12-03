@@ -13,7 +13,7 @@ class m191130_120817_create_activity_statuses_table extends Migration
      */
     public function safeUp()
     {
-        $this->createTable('{{%activity_statuses}}', [
+        $this->createTable('activity_statuses', [
             'id' => $this->primaryKey(),
             'name' => $this->string()->notNull()->comment('название статуса'),
             'is_deleted' => $this->boolean()->notNull()->defaultValue(false)
@@ -26,6 +26,6 @@ class m191130_120817_create_activity_statuses_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('{{%activity_statuses}}');
+        $this->dropTable('activity_statuses');
     }
 }
