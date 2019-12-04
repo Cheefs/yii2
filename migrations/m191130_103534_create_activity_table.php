@@ -15,8 +15,9 @@ class m191130_103534_create_activity_table extends Migration
         $this->createTable('activity', [
             'id' => $this->primaryKey(),
             'name' => $this->string()->notNull()->comment('название собития'),
-            'started_at' => $this->timestamp()->notNull()->comment('начало собития'),
-            'finished_at' => $this->timestamp()->notNull()->comment('завершение собития'),
+            'started_at' => $this->bigInteger()->notNull()->comment('начало собития'),
+            'finished_at' => $this->bigInteger()->comment('завершение собития'),
+            'is_repeatable' => $this->boolean()->notNull()->defaultValue(false)->comment('цикличное ли событие'),
             'is_main' => $this->boolean()->notNull()->defaultValue(false )
                 ->comment('указатель является ли событие основным'),
             'desc' => $this->text(),

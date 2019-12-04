@@ -4,8 +4,11 @@ namespace app\controllers;
 
 use app\models\Activity;
 use app\models\forms\ActivityForm;
+use app\models\search\ActivitySearch;
+use Yii;
 use yii\helpers\Url;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 
 
@@ -24,31 +27,32 @@ a. Несколько файлов нужно прикреплять за одн
 class ActivityController extends Controller {
     /**
      * просмотр нашей задачи
-     * @param  $id int id задачи
      * @return string возвращает вид
     */
-    public function actionIndex( int $id ) {
-        // тут нужно будет заменить на ActiveRecord и делать поиск по id
-        $model = new ActivityForm();
-        $model->setData($id);
+
+    public function actionIndex(){
+        $searchModel = new ActivitySearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-            'model' => $model
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
+
     /**
      * просмотр нашей задачи
-     * @param  $dayId int id дня на котором создаем задачу ( или какойто иной признак )
+     * @param  $id int
      * @return string возвращает вид
      */
-    public function actionCreate(int $dayId) {
-        $model = new ActivityForm();
-        $model->dayId = $dayId;
+    public function actionSave( int $id = null ) {
+        /// если id был передан - делаем запрос на выборку, в проотивном случае оперируем новой моделью
+        $model = $id ? Activity::findOne($id) : new ActivityForm();
+
         if ( $model->load( \Yii::$app->request->post() ) && $model->validate()) {
-            $model->saveFiles();
-            return $this->render('submit-debug', [
-                'model' => $model,
-            ]);
+            if ( $model->save() ) {
+                return $this->redirectToMainPage();
+            }
         }
 
         return $this->render('create', [
@@ -75,23 +79,28 @@ class ActivityController extends Controller {
             'model' => $model
         ]);
     }
+
     /**
      * Удаление задачи
      * @param  $id int id задачи
      * @return string возвращает вид
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete( int $id ) {
-        $model = new Activity();
-        $model->id = $id;
-        return $this->redirectToMainPage($model->id);
+        $model = Activity::findOne($id);
+        if ( $model && $model->delete() ) {
+            return $this->redirectToMainPage();
+        }
+        throw new NotFoundHttpException('activity not found');
     }
 
     /**
      * Просто упростил запись редиректа, чтоб не повторять его везде, мб когдато вьюху сменим
-     * @param  $id int id задачи
      * @return string возвращает вид
      */
-    private function redirectToMainPage( int $id ) {
-        return $this->redirect(Url::to([ 'index', 'id' => $id ]));
+    private function redirectToMainPage( ) {
+        return $this->redirect(Url::to([ 'index' ]));
     }
 }

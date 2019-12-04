@@ -39,8 +39,11 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Day', 'url' => ['/day/index']],
+            ['label' => 'Signup', 'url' => ['/site/register']],
+            ['label' => 'Login', 'url' => ['/site/login']]
         ],
     ]);
+
     NavBar::end();
     ?>
 

@@ -1,36 +1,93 @@
 <?php
-/** @var $model \app\models\Activity */
 
 use yii\helpers\Html;
+use yii\grid\GridView;
 use yii\helpers\Url;
+
+/* @var $this yii\web\View */
+/* @var $searchModel app\models\search\ActivitySearch */
+/* @var $dataProvider yii\data\ActiveDataProvider */
+
+$this->title = 'Activities';
+$this->params['breadcrumbs'][] = $this->title;
 ?>
+<div class="activity-index">
+    <h1><?= Html::encode($this->title) ?></h1>
+    <p><?= Html::a('Create Activity', ['save'], ['class' => 'btn btn-success']) ?></p>
 
-<div class="row">
-    <div class="col-sm-12 text-center">
-        <h1 class="text_bold">
-            <?= $model->name ?>
-            <?= Html::a('<i class="glyphicon glyphicon-pencil"></i>', Url::to(['update', 'id' => $model->id ])) ?>
-        </h1>
-        <div class="row">
-            <div class="col-sm-6">
-                <h3>
-                    <span class="text_bold"><?= Yii::t('app', 'from') ?>:</span>
-                    <span><?= $model->from ?? Yii::t('app', 'not set') ?></span>
-                </h3>
-            </div>
-            <div class="col-sm-6">
-                <h3>
-                    <span class="text_bold"><?= Yii::t('app', 'to') ?>:</span>
-                    <span><?= $model->to ?? Yii::t('app', 'not set') ?></span>
-                </h3>
-            </div>
-        </div>
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'columns' => [
+            [ 'attribute' => 'id' ],
+            [ 'attribute' => 'name' ],
+            [
+                'attribute' => 'started_at',
+                 'value' => function( $model ) {
+                    /** @var $model \app\models\Activity  */
+                    return Yii::$app->formatter->asDatetime( $model->started_at, $model::DATE_FORMAT_FOR_FORMATTER );
+                }
+            ],
+            [
+                'attribute' => 'finished_at',
+                'value' => function( $model ) {
+                    /** @var $model \app\models\Activity  */
+                    if ($model->finished_at) {
+                        return  Yii::$app->formatter->asDatetime( $model->finished_at, $model::DATE_FORMAT_FOR_FORMATTER );
+                    }
+                   return null;
+                }
+            ],
+            [
+                'attribute' => 'is_main',
+                'format' => 'raw',
+                'value' => function( $model ) {
+                    /** @var $model \app\models\Activity  */
+                    $text = $model->is_main ? 'yes' : 'no';
+                    return Yii::t('app', $text);
+                }
+            ],
+            [
+                'attribute' => 'is_repeatable',
+                'format' => 'raw',
+                'value' => function( $model ) {
+                    /** @var $model \app\models\Activity  */
+                    $text = $model->is_main ? 'yes' : 'no';
+                    return Yii::t('app', $text);
+                }
+            ],
+            [
+                'attribute' => 'created_at',
+                'format' => 'raw',
+                'value' => function( $model ) {
+                    /** @var $model \app\models\Activity  */
+                    return Yii::$app->formatter->asDatetime( $model->created_at, $model::DATE_FORMAT_FOR_FORMATTER );
+                }
+            ],
+            [ 'attribute' => 'desc' ],
+            [
+                'attribute' => 'updated_at',
+                'format' => 'raw',
+                'value' => function( $model ) {
+                    /** @var $model \app\models\Activity  */
+                    return Yii::$app->formatter->asDatetime( $model->updated_at, $model::DATE_FORMAT_FOR_FORMATTER );
+                }
+            ],
 
-        <p><?= $model->desc ?></p>
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{update}{delete}',
+                'buttons' => [
+                    'update' => function ($url, $model, $key) {
+                         return Html::a('', Url::to(['save', 'id' => $model->id ]), [
+                            'class' => 'glyphicon glyphicon-pencil'
+                         ]);
+                    },
+                    'delete',
+                ]
+            ],
+        ],
+    ]); ?>
 
-        <?= Html::a(Yii::t('app', 'remove'), Url::to(['delete', 'id' => $model->id ]), [
-            'class' => 'btn btn-primary'
-        ]) ?>
-    </div>
+
 </div>
-
