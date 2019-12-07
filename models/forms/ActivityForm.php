@@ -15,10 +15,11 @@ use yii\web\UploadedFile;
  *
  *  переведенные даты начала и завершения в timestamp ( данная переменная просто хранит в себе значение до инсерта )
  * @property $startedAtTimestamp
+ * @property array $repeat
+ * @property mixed $data
  * @property $finishedAtTimestamp
  */
-//4) Модифицируйте форму создания события так, чтобы через неё можно было редактировать уже существующие события.
-// ( тут как я понял, нужно привести к единому виду create update Views && Actions, и возможно поправить форму )
+
 class ActivityForm extends Activity {
 
     private $startedAtTimestamp;
@@ -32,25 +33,27 @@ class ActivityForm extends Activity {
     {
         /** поведение для установки даты создания, и даты редактирование текущей датой */
         return [
-            'timestamp' => [
+             [
                 'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
-                    ActiveRecord::EVENT_BEFORE_UPDATE =>  'updated_at',
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
                 ],
+                'value' => time()
             ],
         ];
     }
     // 5)* Сделайте так, чтобы для пользователя дата показывалась в формате «день.месяц.год», а в БД продолжала сохраняться в формате MySQL timestamp.
-    /** перед сохранением, устанавливаем unix time
-     * @param $insert
-     * @return bool
-     */
+///*    /** перед сохранением, устанавливаем unix time
+//     * @param $insert
+//     * @return bool
+//     */
     public function beforeSave($insert) {
         $this->started_at = $this->startedAtTimestamp;
         $this->finished_at = $this->finishedAtTimestamp;
         return parent::beforeSave($insert);
     }
+
     /**
      * После того как нашли данные в бд, форматируем их в понятные даты для пользователя
     */
