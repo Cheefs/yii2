@@ -3,63 +3,88 @@
 namespace app\models;
 
 use Yii;
-use yii\base\Model;
-use yii\web\UploadedFile;
 
 /**
+ * This is the model class for table "activity".
  *
- * 1. Событие должно иметь больше свойств.
- * a. Оно может повторяться.
- * b. Оно может быть блокирующим (в этот же день не может быть других событий).
+ * @property int $id
+ * @property string $name название собития
+ * @property string $started_at начало собития
+ * @property string $finished_at завершение собития
+ * @property int $is_repeatable цикличное ли событие
+ * @property int $is_main указатель является ли событие основным
+ * @property string $desc
+ * @property int $created_at
+ * @property int $updated_at
  *
- *  Сущьность задачи
- * @property int $id             Id записи в базе данных
- * @property string $name        Название задачи
- * @property bool $isMain        Указание основная ли это задача на день
- * @property string $from        Граници задачи от
- * @property string $to          Граници задачи до
- * @property bool $isRepeatable  Повторяется ли это задача каждый день
- * @property string $desc        Описание задачи
- * @property array $repeatDays   Дни в которые данная задача должна повторятся
- * @property int $dayId          Id дня в календаре на котором создают задачу
- * @property UploadedFile $attachments
-*/
-class Activity extends Model {
-    public $id;
-    public $from;
-    public $to;
-    public $isRepeatable = 0;
-    public $isMain = 0;
-    public $name;
-    public $desc;
-    public $repeatDays = [];
-    public $attachments;
-    public $dayId;
+ * @property ActivityToStatus[] $activityToStatuses
+ * @property ActivityToUsers[] $activityToUsers
+ * @property Calendar[] $calendars
+ */
+class Activity extends \yii\db\ActiveRecord
+{
+    //2) Форматы дат могут меняться, поэтому хранить их в коде не лучшая идея. Вынесите форматы дат в конфигурацию.
+    // Помните, что захламлять один файл web плохо. ??? ( постановка задачи странная, и непонятная , поэтому задал формат даты в форме,
+    // а пользователю дату формирует виджет, надеюсь правильно понял )
+    const DATE_FORMAT_FOR_DATE_PICKER = 'dd-mm-yyyy';
+    const DATE_FORMAT_FOR_FORMATTER = 'php:d-m-Y h:i';
 
+    const NOT_MAIN_ACTIVITY = 0;
+    /**
+     * {@inheritdoc}
+     */
+    public static function tableName() {
+        return 'activity';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function rules() {
         return [
-            [[ 'id', 'dayId' ], 'integer'],
-            [[ 'isMain', 'isRepeatable' ], 'boolean'],
-            [[ 'from', 'to', 'name', 'desc', 'repeatDays' ], 'safe'],
-            [[ 'name', 'isMain', 'from', 'to', 'isRepeatable' ], 'required'],
-            [[ 'attachments' ], 'file', 'maxFiles' => 4],
+            [['name', 'started_at'], 'required'],
+            [['started_at', 'finished_at'], 'safe'],
+            [['is_repeatable', 'is_main', 'created_at', 'updated_at'], 'integer'],
+            [['desc'], 'string'],
+            [['name'], 'string', 'max' => 255],
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function attributeLabels() {
         return [
-            'id' => Yii::t('app', 'id'),
-            'from' => Yii::t('app', 'from'),
-            'to' => Yii::t('app', 'to'),
-            'name' => Yii::t('app', 'name'),
-            'desc' => Yii::t('app', 'desc'),
-            'isMain' => Yii::t('app', 'is main'),
-            'repeatDays' => Yii::t('app', 'repeat days'),
-            'isRepeatable' => Yii::t('app', 'is repeatable'),
-            'attachments' => Yii::t('app', 'attachments'),
-            'dayId' => Yii::t('app', 'dayId'),
+            'id' => Yii::t('app', 'ID'),
+            'name' => Yii::t('app', 'Name'),
+            'started_at' => Yii::t('app', 'Started At'),
+            'finished_at' => Yii::t('app', 'Finished At'),
+            'is_repeatable' => Yii::t('app', 'Is Repeatable'),
+            'is_main' => Yii::t('app', 'Is Main'),
+            'desc' => Yii::t('app', 'Desc'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getActivityToStatuses() {
+        return $this->hasMany(ActivityToStatus::class, ['activity_id' => 'id']);
+    }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getActivityToUsers() {
+        return $this->hasMany(ActivityToUsers::class, ['activity_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCalendars() {
+        return $this->hasMany(Calendar::class, ['activity_id' => 'id']);
+    }
 }

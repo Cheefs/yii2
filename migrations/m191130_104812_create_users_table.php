@@ -12,17 +12,18 @@ class m191130_104812_create_users_table extends Migration
      */
     public function safeUp()
     {
-
-        /**
-          * в модели user хранятся также поля $authKey и $accessToken но они используются в сессиях и в базу ненужны
-          * но пока что внес и их в таблицу, для наполнения, потом перерабоаем
-         */
-        $this->createTable('{{%users}}', [
+        $this->createTable('users', [
             'id' => $this->primaryKey(),
             'username' => $this->string()->unique()->notNull()->comment('имя пользователя'),
-            'password' => $this->string()->notNull()->comment('пароль'),
-            'authKey' => $this->string()->notNull()->comment('ключ доступа к чемуто'),
-            'accessToken' => $this->string()->notNull()->comment('токен')
+            'password_hash' => $this->string()->notNull(),
+            'first_name' => $this->string()->comment('имя пользователя'),
+            'last_name' => $this->string()->comment('фамилия пользователя'),
+            'second_name' => $this->string()->comment('отчество пользователя'),
+            'phone' => $this->string()->comment('телефон пользователя'),
+            'email' => $this->string()->notNull()->unique()->comment('почта пользователя'),
+            'auth_key' => $this->string(32)->notNull()->comment('ключ аутификации'),
+            'password_reset_token' => $this->string()->unique(),
+            'is_deleted' => $this->boolean()->notNull()->defaultValue(false)->comment('флаг активности')
         ]);
     }
 
@@ -31,6 +32,6 @@ class m191130_104812_create_users_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('{{%users}}');
+        $this->dropTable('users');
     }
 }

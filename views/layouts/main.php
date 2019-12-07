@@ -38,9 +38,12 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Day', 'url' => ['/day/index']],
+            ['label' => 'Activity', 'url' => ['/activity/index']],
+            ['label' => 'Signup', 'url' => ['/site/register']],
+            ['label' => 'Login', 'url' => ['/site/login']]
         ],
     ]);
+
     NavBar::end();
     ?>
 

@@ -1,7 +1,7 @@
 <?php
 /** @var $model \app\models\forms\ActivityForm */
 
-use app\models\forms\DayForm;
+use kartik\datetime\DateTimePicker;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
@@ -18,23 +18,27 @@ use yii\helpers\Url;
     <div class="col-sm-12">
         <?= $form->field($model, 'name')->textInput() ?>
         <?= $form->field($model, 'desc')->textarea() ?>
-        <?= $form->field($model, 'from')->textInput() ?>
-        <?= $form->field($model, 'to')->textInput() ?>
-        <?= $form->field($model, 'isMain')->radioList([
+        <?= $form->field($model, 'started_at')->widget(DateTimePicker::class, [
+            'options' => ['placeholder' => 'Enter event time ...'],
+            'pluginOptions' => [
+                'format' => $model::DATE_FORMAT_FOR_DATE_PICKER,
+                'autoclose' => true
+            ]
+        ])?>
+        <?= $form->field($model, 'finished_at')->widget(DateTimePicker::class, [
+            'options' => ['placeholder' => 'Enter event time ...'],
+            'pluginOptions' => [
+                'format' =>  $model::DATE_FORMAT_FOR_DATE_PICKER,
+                'autoclose' => true
+            ]
+        ])?>
+        <?= $form->field($model, 'is_main')->radioList([
             0 => Yii::t('app', 'no'),
             1 => Yii::t('app', 'yes'),
         ]) ?>
-        <?= $form->field($model, 'isRepeatable')->checkbox() ?>
-        <div class="text-center">
-            <h2><?= Yii::t('app', 'days of activity') ?></h2>
-            <?= $form->field($model, 'repeatDays')->checkboxList( DayForm::DAYS_LIST )
-                ->label(false);
-            ?>
-        </div>
-        <?= $form->field($model, 'attachments[]')->fileInput(['multiple' => true ]) ?>
-        <?= $form->field($model, 'attachments[]')->fileInput(['multiple' => true ]) ?>
-        <?= $form->field($model, 'attachments[]')->fileInput(['multiple' => true ]) ?>
+        <?= $form->field($model, 'is_repeatable')->checkbox() ?>
     </div>
+
 </div>
 
 <div class="text-center">
