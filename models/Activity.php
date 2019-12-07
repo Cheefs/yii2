@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "activity".
@@ -36,6 +38,21 @@ class Activity extends \yii\db\ActiveRecord
      */
     public static function tableName() {
         return 'activity';
+    }
+
+    public function behaviors()
+    {
+        /** поведение для установки даты создания, и даты редактирование текущей датой */
+        return [
+            [
+                'class' => TimestampBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
+                ],
+                'value' => time()
+            ],
+        ];
     }
 
     /**
@@ -85,5 +102,15 @@ class Activity extends \yii\db\ActiveRecord
      */
     public function getCalendars() {
         return $this->hasMany(Calendar::class, ['activity_id' => 'id']);
+    }
+
+    /**
+     * После того как нашли данные в бд, форматируем их в понятные даты для пользователя
+     * upd: вынес с формы, потому что это поведение работает с моделью непосредственно
+     */
+    public function afterFind() {
+        parent::afterFind();
+        $this->started_at = Yii::$app->formatter->asDatetime( $this->started_at, self::DATE_FORMAT_FOR_FORMATTER );
+        $this->finished_at = $this->finished_at ? Yii::$app->formatter->asDatetime( $this->finished_at, self::DATE_FORMAT_FOR_FORMATTER  ) : null;
     }
 }

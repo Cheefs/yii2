@@ -51,19 +51,10 @@ class ActivityForm extends Activity {
         return parent::beforeSave($insert);
     }
 
-    /**
-     * После того как нашли данные в бд, форматируем их в понятные даты для пользователя
-    */
-    public function afterFind() {
-        parent::afterFind();
-        $this->started_at = Yii::$app->formatter->asDatetime( $this->started_at, self::DATE_FORMAT_FOR_FORMATTER );
-        $this->finished_at = $this->finished_at ? Yii::$app->formatter->asDatetime( $this->finished_at, self::DATE_FORMAT_FOR_FORMATTER  ) : null;
-    }
-
     public function rules() {
         $rules = [
             /** проверка по полю Started_at так как дата окончания необязательное то в случае не заполнения поля - валидация не сработает */
-            [['started_at'], 'validateFinishedDate' ]
+            ['started_at', 'validateFinishedDate' ]
         ];
         return ArrayHelper::merge(parent::rules(), $rules );
     }
