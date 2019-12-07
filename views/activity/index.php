@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Activity as ActivityModel;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\helpers\Url;
@@ -13,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="activity-index">
     <h1><?= Html::encode($this->title) ?></h1>
-    <p><?= Html::a('Create Activity', ['save'], ['class' => 'btn btn-success']) ?></p>
+    <p><?= Html::a('Create Activity', ['create'], ['class' => 'btn btn-success']) ?></p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -24,14 +25,14 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'started_at',
                  'value' => function( $model ) {
-                    /** @var $model \app\models\Activity  */
+                    /** @var $model ActivityModel */
                     return Yii::$app->formatter->asDatetime( $model->started_at, $model::DATE_FORMAT_FOR_FORMATTER );
                 }
             ],
             [
                 'attribute' => 'finished_at',
                 'value' => function( $model ) {
-                    /** @var $model \app\models\Activity  */
+                    /** @var $model ActivityModel */
                     if ($model->finished_at) {
                         return  Yii::$app->formatter->asDatetime( $model->finished_at, $model::DATE_FORMAT_FOR_FORMATTER );
                     }
@@ -42,7 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'is_main',
                 'format' => 'raw',
                 'value' => function( $model ) {
-                    /** @var $model \app\models\Activity  */
+                    /** @var $model ActivityModel */
                     $text = $model->is_main ? 'yes' : 'no';
                     return Yii::t('app', $text);
                 }
@@ -51,7 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'is_repeatable',
                 'format' => 'raw',
                 'value' => function( $model ) {
-                    /** @var $model \app\models\Activity  */
+                    /** @var $model ActivityModel */
                     $text = $model->is_main ? 'yes' : 'no';
                     return Yii::t('app', $text);
                 }
@@ -60,7 +61,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'created_at',
                 'format' => 'raw',
                 'value' => function( $model ) {
-                    /** @var $model \app\models\Activity  */
+                    /** @var $model ActivityModel */
                     return Yii::$app->formatter->asDatetime( $model->created_at, $model::DATE_FORMAT_FOR_FORMATTER );
                 }
             ],
@@ -69,7 +70,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'updated_at',
                 'format' => 'raw',
                 'value' => function( $model ) {
-                    /** @var $model \app\models\Activity  */
+                    /** @var $model ActivityModel */
                     return Yii::$app->formatter->asDatetime( $model->updated_at, $model::DATE_FORMAT_FOR_FORMATTER );
                 }
             ],
@@ -79,7 +80,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template' => '{update}{delete}',
                 'buttons' => [
                     'update' => function ($url, $model, $key) {
-                         return Html::a('', Url::to(['save', 'id' => $model->id ]), [
+                         return Html::a('', Url::to(['update', 'id' => $model->id ]), [
                             'class' => 'glyphicon glyphicon-pencil'
                          ]);
                     },
