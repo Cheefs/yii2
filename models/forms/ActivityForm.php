@@ -3,21 +3,20 @@
 namespace app\models\forms;
 
 use app\models\Activity;
-use app\models\Day;
+use app\models\ActivityToUsers;
 use DateTime;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\db\Exception;
 use yii\helpers\ArrayHelper;
 use yii\web\UploadedFile;
 
 /** перенес методы в форму, потому что они нужны тут а не в моделе
  *
  *  переведенные даты начала и завершения в timestamp ( данная переменная просто хранит в себе значение до инсерта )
- * @property $startedAtTimestamp
  * @property array $repeat
  * @property mixed $data
- * @property $finishedAtTimestamp
  */
 
 class ActivityForm extends Activity {
@@ -43,14 +42,12 @@ class ActivityForm extends Activity {
             ],
         ];
     }
-    // 5)* Сделайте так, чтобы для пользователя дата показывалась в формате «день.месяц.год», а в БД продолжала сохраняться в формате MySQL timestamp.
-///*    /** перед сохранением, устанавливаем unix time
-//     * @param $insert
-//     * @return bool
-//     */
+
     public function beforeSave($insert) {
         $this->started_at = $this->startedAtTimestamp;
         $this->finished_at = $this->finishedAtTimestamp;
+        $this->author_id = Yii::$app->user->id || 1;
+
         return parent::beforeSave($insert);
     }
 

@@ -9,8 +9,6 @@ namespace app\models\forms;
 
 use app\models\User;
 use Yii;
-use yii\base\Model;
-use yii\db\Transaction;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -30,7 +28,7 @@ class SignUpForm extends User {
             [['username', 'email' ], 'trim'],
             [['email'], 'string', 'max' => 255 ],
             [['password'], 'string', 'min' => 4 ],
-            [['username', 'email', 'password'], 'required'],
+            [['username', 'email'], 'required'],
             [['username'], 'string', 'min' => 2, 'max' => 255],
             [['email'], 'unique',
                 'targetClass' => User::class,
@@ -51,10 +49,31 @@ class SignUpForm extends User {
      * @return boolean
      * @throws \yii\base\Exception
      */
-    public function register()
-    {
-        $this->setPassword($this->password);
+    public function register() {
+        $randomPassword = Yii::$app->security->generateRandomString(6 );
+        $this->setPassword( $randomPassword );
         $this->generateAuthKey();
+        $this->sendEmail($randomPassword, $this->username, $this->email );
         return $this->save();
     }
+    /**
+     * Отправка почты
+     * @param $password
+     * @param $username
+     * @param $email
+    */
+    private function sendEmail( $password, $username, $email ) {
+        Yii::$app->mailer->compose()
+            ->setFrom( Yii::$app->params['senderEmail'] )
+            ->setTo( $email )
+            ->setSubject( Yii::t('app', 'yours account data'))
+            ->setHtmlBody('
+                <b>'.Yii::t('app', 'login').':</b>
+                <span>'. $username.'</span><br/>
+                <b>'.Yii::t('app', 'password').':</b>
+                <span>'.$password.'</span>
+            ')
+            ->send();
+    }
 }
+

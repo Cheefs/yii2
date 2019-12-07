@@ -2,6 +2,7 @@
 
 return [
     'adminEmail' => 'admin@example.com',
-    'senderEmail' => 'noreply@example.com',
+    'senderEmail' => 'smtptest22@mail.ru',
+    'senderPassword' => 'Isduj5s4',
     'senderName' => 'Example.com mailer',
 ];

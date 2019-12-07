@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use phpDocumentor\Reflection\Types\Self_;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
@@ -23,6 +24,8 @@ use yii\web\IdentityInterface;
  * @property int $is_deleted флаг активности
  *
  * @property ActivityToUsers[] $activityToUsers
+ * @property mixed $password
+ * @property string $authKey
  * @property Calendar[] $calendars
  */
 class User extends ActiveRecord implements IdentityInterface
@@ -43,7 +46,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             [['username', 'email'], 'required'],
-            [['is_deleted'], 'integer'],
+            ['is_deleted', 'default', 'value' => !self::IS_DELETED ],
             [['username', 'first_name', 'last_name', 'second_name', 'phone', 'email', 'password_hash', 'password_reset_token'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['username'], 'unique'],

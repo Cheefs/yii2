@@ -12,13 +12,14 @@ use Yii;
  * @property string $started_at начало собития
  * @property string $finished_at завершение собития
  * @property int $is_repeatable цикличное ли событие
+ * @property int $author_id
  * @property int $is_main указатель является ли событие основным
  * @property string $desc
  * @property int $created_at
  * @property int $updated_at
  *
  * @property ActivityToStatus[] $activityToStatuses
- * @property ActivityToUsers[] $activityToUsers
+ * @property mixed $author
  * @property Calendar[] $calendars
  */
 class Activity extends \yii\db\ActiveRecord
@@ -44,7 +45,7 @@ class Activity extends \yii\db\ActiveRecord
         return [
             [['name', 'started_at'], 'required'],
             [['started_at', 'finished_at'], 'safe'],
-            [['is_repeatable', 'is_main', 'created_at', 'updated_at'], 'integer'],
+            [['is_repeatable', 'author_id', 'is_main', 'created_at', 'updated_at'], 'integer'],
             [['desc'], 'string'],
             [['name'], 'string', 'max' => 255],
         ];
@@ -64,7 +65,12 @@ class Activity extends \yii\db\ActiveRecord
             'desc' => Yii::t('app', 'Desc'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
+            'author_id' => Yii::t('app', 'author id'),
         ];
+    }
+
+    public function getAuthor() {
+       return $this->hasOne(User::class, ['id' => 'author_id']);
     }
 
     /**
@@ -72,13 +78,6 @@ class Activity extends \yii\db\ActiveRecord
      */
     public function getActivityToStatuses() {
         return $this->hasMany(ActivityToStatus::class, ['activity_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getActivityToUsers() {
-        return $this->hasMany(ActivityToUsers::class, ['activity_id' => 'id']);
     }
 
     /**

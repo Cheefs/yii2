@@ -14,7 +14,7 @@ use Yii;
  * @property string $updated_at дата редактировиния
  *
  * @property Activity $activity
- * @property Users $user
+ * @property User $user
  */
 class Calendar extends \yii\db\ActiveRecord
 {
@@ -36,7 +36,7 @@ class Calendar extends \yii\db\ActiveRecord
             [['user_id', 'activity_id'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['activity_id'], 'exist', 'skipOnError' => true, 'targetClass' => Activity::className(), 'targetAttribute' => ['activity_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -67,6 +67,6 @@ class Calendar extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id']);
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 }
