@@ -18,7 +18,15 @@ $config = [
             'cookieValidationKey' => 'qkI5AYFHa0QCmg67UROZd5D_T_yIgBSx',
         ],
         'cache' => [
-            'class' => 'yii\caching\FileCache',
+            'class' => \yii\caching\MemCache::class,
+            'useMemcached' => true,
+            'servers' => [
+                [
+                    'host' => 'memcached',
+                    'port' => 11211,
+                    'persistent' => false,
+                ],
+            ],
         ],
         'user' => [
             'identityClass' => 'app\models\User',
@@ -32,15 +40,7 @@ $config = [
             // send all mails to a file by default. You have to set
             // 'useFileTransport' to false and configure a transport
             // for the mailer to send real emails.
-            'useFileTransport' => false,
-            'transport' => [
-                'class' => 'Swift_SmtpTransport',
-                'host' => 'smtp.mail.ru',
-                'username' => 'smtptest22@mail.ru',
-                'password' => 'Isduj5s4',
-                'port' => '465',
-                'encryption' => 'ssl',
-            ],
+            'useFileTransport' => true,
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
