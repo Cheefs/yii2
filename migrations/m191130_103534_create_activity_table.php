@@ -21,6 +21,7 @@ class m191130_103534_create_activity_table extends Migration
             'is_main' => $this->boolean()->notNull()->defaultValue(false )
                 ->comment('указатель является ли событие основным'),
             'desc' => $this->text(),
+            'author_id' => $this->integer(),
             'created_at' => $this->bigInteger(),
             'updated_at' => $this->bigInteger()
         ]);

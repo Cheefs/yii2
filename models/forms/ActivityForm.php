@@ -3,21 +3,20 @@
 namespace app\models\forms;
 
 use app\models\Activity;
-use app\models\Day;
+use app\models\ActivityToUsers;
 use DateTime;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\db\Exception;
 use yii\helpers\ArrayHelper;
 use yii\web\UploadedFile;
 
 /** перенес методы в форму, потому что они нужны тут а не в моделе
  *
  *  переведенные даты начала и завершения в timestamp ( данная переменная просто хранит в себе значение до инсерта )
- * @property $startedAtTimestamp
  * @property array $repeat
  * @property mixed $data
- * @property $finishedAtTimestamp
  */
 
 class ActivityForm extends Activity {
@@ -43,30 +42,19 @@ class ActivityForm extends Activity {
             ],
         ];
     }
-    // 5)* Сделайте так, чтобы для пользователя дата показывалась в формате «день.месяц.год», а в БД продолжала сохраняться в формате MySQL timestamp.
-///*    /** перед сохранением, устанавливаем unix time
-//     * @param $insert
-//     * @return bool
-//     */
+
     public function beforeSave($insert) {
         $this->started_at = $this->startedAtTimestamp;
         $this->finished_at = $this->finishedAtTimestamp;
-        return parent::beforeSave($insert);
-    }
+        $this->author_id = Yii::$app->user->id || 1;
 
-    /**
-     * После того как нашли данные в бд, форматируем их в понятные даты для пользователя
-    */
-    public function afterFind() {
-        parent::afterFind();
-        $this->started_at = Yii::$app->formatter->asDatetime( $this->started_at, self::DATE_FORMAT_FOR_FORMATTER );
-        $this->finished_at = $this->finished_at ? Yii::$app->formatter->asDatetime( $this->finished_at, self::DATE_FORMAT_FOR_FORMATTER  ) : null;
+        return parent::beforeSave($insert);
     }
 
     public function rules() {
         $rules = [
             /** проверка по полю Started_at так как дата окончания необязательное то в случае не заполнения поля - валидация не сработает */
-            [['started_at'], 'validateFinishedDate' ]
+            ['started_at', 'validateFinishedDate' ]
         ];
         return ArrayHelper::merge(parent::rules(), $rules );
     }

@@ -15,7 +15,6 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php $form = ActiveForm::begin(['id' => 'register-form']); ?>
             <?= $form->field($model, 'username')->textInput() ?>
             <?= $form->field($model, 'email')->textInput() ?>
-            <?= $form->field($model, 'password')->passwordInput() ?>
 
             <hr/>
             <h4><?= Yii::t('app', 'profile fields') ?></h4>

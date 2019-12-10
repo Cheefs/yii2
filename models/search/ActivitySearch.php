@@ -5,13 +5,16 @@ namespace app\models\search;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Activity;
-
+/**
+ * @property $author string
+ **/
 class ActivitySearch extends Activity
 {
+    public $author;
     public function rules() {
         return [
             [['id', 'started_at', 'finished_at', 'is_main', 'is_repeatable', 'created_at', 'updated_at'], 'integer'],
-            [['name', 'desc'], 'safe'],
+            [['name', 'desc', 'author'], 'safe'],
         ];
     }
 
@@ -23,7 +26,6 @@ class ActivitySearch extends Activity
      * Creates data provider instance with search query applied
      *
      * @param array $params
-     *
      * @return ActiveDataProvider
      */
     public function search($params) {
@@ -45,6 +47,10 @@ class ActivitySearch extends Activity
             ])
             ->andFilterWhere(['like', 'desc', $this->desc ])
             ->andFilterWhere(['like', 'name', $this->name ]);
+        }
+        if ( $this->author ) {
+            $query->joinWith('author as author')
+                  ->andWhere(['like', 'author.username', $this->author ]);
         }
         return $dataProvider;
     }

@@ -18,7 +18,15 @@ $config = [
             'cookieValidationKey' => 'qkI5AYFHa0QCmg67UROZd5D_T_yIgBSx',
         ],
         'cache' => [
-            'class' => 'yii\caching\FileCache',
+            'class' => \yii\caching\MemCache::class,
+            'useMemcached' => true,
+            'servers' => [
+                [
+                    'host' => 'memcached',
+                    'port' => 11211,
+                    'persistent' => false,
+                ],
+            ],
         ],
         'user' => [
             'identityClass' => 'app\models\User',
@@ -48,7 +56,6 @@ $config = [
                 '*' => [
                     'class' => 'yii\i18n\PhpMessageSource',
                     'basePath' => '@app/messages/',
-                    'language' => 'ru',
                     'sourceLanguage' => 'ru'
                 ],
             ],

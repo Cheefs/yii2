@@ -22,6 +22,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             [ 'attribute' => 'id' ],
             [ 'attribute' => 'name' ],
+            [ 'attribute' => 'author',
+                'value' => function($model) {
+                    return $model->author->username;
+                }
+            ],
             [
                 'attribute' => 'started_at',
                  'value' => function( $model ) {

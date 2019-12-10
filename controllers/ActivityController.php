@@ -33,7 +33,7 @@ class ActivityController extends Controller {
         if ( $model->load( \Yii::$app->request->post() ) && $model->save() ) {
             return $this->redirect('index');
         }
-        return $this->render('create', [
+        return $this->render('form', [
             'model' => $model
         ]);
     }
@@ -44,12 +44,12 @@ class ActivityController extends Controller {
      * @throws NotFoundHttpException
      */
     public function actionUpdate( int $id ) {
-        $model = Activity::findOne($id);
+        $model = ActivityForm::findOne($id);
         if ( $model ) {
             if ( $model->load( \Yii::$app->request->post() ) && $model->save()) {
                 return $this->redirect('index');
             }
-            return $this->render('update', [
+            return $this->render('form', [
                 'model' => $model
             ]);
         }
