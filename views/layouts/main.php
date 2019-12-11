@@ -35,14 +35,22 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
+
+    $guestItems = [
+        ['label' => 'Sign up', 'url' => ['/site/register']],
+        ['label' => 'Login', 'url' => ['/site/login']]
+    ];
+
+    $loginUserItems = [
+        ['label' => 'My Account', 'url' => ['/account']],
+        ['label' => 'My Activities', 'url' => ['/activity']],
+        ['label' => 'Calendar', 'url' => ['/calendar']],
+        ['label' => 'Logout', 'url' => ['site/logout']],
+    ];
+
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => [
-            ['label' => 'Activity', 'url' => ['/activity']],
-            ['label' => 'Users', 'url' => ['/users']],
-            ['label' => 'Signup', 'url' => ['/site/register']],
-            ['label' => 'Login', 'url' => ['/site/login']]
-        ],
+        'items' => Yii::$app->user->isGuest ? $guestItems : $loginUserItems,
     ]);
 
     NavBar::end();

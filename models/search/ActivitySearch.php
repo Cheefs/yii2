@@ -26,9 +26,10 @@ class ActivitySearch extends Activity
      * Creates data provider instance with search query applied
      *
      * @param array $params
+     * @param bool $forCurrentUser признак что ищем только для активного пользователя
      * @return ActiveDataProvider
      */
-    public function search($params) {
+    public function search( array $params, bool $forCurrentUser ) {
         $this->load($params);
         $query = Activity::find();
         $dataProvider = new ActiveDataProvider([
@@ -44,11 +45,12 @@ class ActivitySearch extends Activity
                 'cycle' => $this->is_repeatable,
                 'created_at' => $this->created_at,
                 'updated_at' => $this->updated_at,
+                'author_id' => $forCurrentUser ? \Yii::$app->user->id : $this->author_id
             ])
             ->andFilterWhere(['like', 'desc', $this->desc ])
             ->andFilterWhere(['like', 'name', $this->name ]);
         }
-        if ( $this->author ) {
+        if ( !$forCurrentUser && $this->author ) {
             $query->joinWith('author as author')
                   ->andWhere(['like', 'author.username', $this->author ]);
         }

@@ -2,21 +2,23 @@
 
 namespace app\controllers;
 
+use app\components\behaviors\CacheBehavior;
+use edofre\fullcalendar\models\Event;
 use Yii;
-use yii\web\Controller;
 use app\models\Activity;
 use app\models\forms\ActivityForm;
 use app\models\search\ActivitySearch;
 use yii\web\NotFoundHttpException;
 
-class ActivityController extends Controller {
+class ActivityController extends BaseController {
     /**
      * просмотр нашей задачи
      * @return string возвращает вид
     */
-    public function actionIndex(){
+    public function actionIndex() {
         $searchModel = new ActivitySearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $query = Yii::$app->request->queryParams;
+        $dataProvider = $searchModel->search( $query, true );
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -70,5 +72,33 @@ class ActivityController extends Controller {
             return $this->redirect('index');
         }
         throw new NotFoundHttpException('activity not found');
+    }
+
+    /**
+     * Получение списка активностей для календаря для конкретного пользователя
+     * @param  int $userId
+     * @return array
+     **/
+    public function actionEvents( int $userId ) {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $activitiesList = Activity::findAll([ 'author_id' => $userId ]);
+        $calendarEvents = [];
+
+        if ( $activitiesList && is_array($activitiesList) && count( $activitiesList )) {
+            foreach ( $activitiesList as $activity ) {
+
+                $calendarEvents[] = new Event([
+                    'id' => $activity->id,
+                    'title' => $activity->name,
+                    'start' => Yii::$app->formatter->asDatetime($activity->started_at, 'php:Y-m-d H:i:s' ),
+                    'end' =>  Yii::$app->formatter->asDatetime($activity->finished_at, 'php:Y-m-d H:i:s' ),
+
+                    'editable'         => true,
+                    'startEditable'    => true,
+                    'durationEditable' => true,
+                ]);
+            }
+        }
+        return $calendarEvents;
     }
 }

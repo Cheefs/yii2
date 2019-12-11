@@ -46,7 +46,7 @@ class ActivityForm extends Activity {
     public function beforeSave($insert) {
         $this->started_at = $this->startedAtTimestamp;
         $this->finished_at = $this->finishedAtTimestamp;
-        $this->author_id = Yii::$app->user->id || 1;
+        $this->author_id = Yii::$app->user->id;
 
         return parent::beforeSave($insert);
     }
