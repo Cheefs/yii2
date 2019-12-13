@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'started_at',
                  'value' => function( $model ) {
                     /** @var $model ActivityModel */
-                    return Yii::$app->formatter->asDatetime( $model->started_at, $model::DATE_FORMAT_FOR_FORMATTER );
+                    return Yii::$app->formatter->asDatetime( $model->started_at );
                 }
             ],
             [
@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function( $model ) {
                     /** @var $model ActivityModel */
                     if ($model->finished_at) {
-                        return  Yii::$app->formatter->asDatetime( $model->finished_at, $model::DATE_FORMAT_FOR_FORMATTER );
+                        return  Yii::$app->formatter->asDatetime( $model->finished_at );
                     }
                    return null;
                 }
@@ -62,7 +62,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value' => function( $model ) {
                     /** @var $model ActivityModel */
-                    return Yii::$app->formatter->asDatetime( $model->created_at, $model::DATE_FORMAT_FOR_FORMATTER );
+                    return Yii::$app->formatter->asDatetime( $model->created_at );
                 }
             ],
             [ 'attribute' => 'desc' ],
@@ -71,7 +71,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value' => function( $model ) {
                     /** @var $model ActivityModel */
-                    return Yii::$app->formatter->asDatetime( $model->updated_at, $model::DATE_FORMAT_FOR_FORMATTER );
+                    return Yii::$app->formatter->asDatetime( $model->updated_at );
                 }
             ],
 

@@ -20,7 +20,6 @@ $this->params['breadcrumbs'][] = $this->title;
         ], ['class' => 'btn btn-primary']) ?>
     </p>
 
-
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
