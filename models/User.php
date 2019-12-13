@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\components\behaviors\CacheBehavior;
 use phpDocumentor\Reflection\Types\Self_;
 use Yii;
 use yii\base\NotSupportedException;
@@ -31,6 +32,14 @@ use yii\web\IdentityInterface;
 class User extends ActiveRecord implements IdentityInterface
 {
     const IS_DELETED = true;
+
+    public function behaviors() {
+        return [
+            CacheBehavior::class => [
+                'class' => CacheBehavior::class,
+            ]
+        ];
+    }
 
     /**
      * {@inheritdoc}
@@ -93,7 +102,7 @@ class User extends ActiveRecord implements IdentityInterface
      * @inheritdoc
      */
     public static function findIdentity($id) {
-        return static::findOne(['id' => $id, 'is_deleted' => !self::IS_DELETED]);
+        return static::findOne(['id' => $id, 'is_deleted' => !self::IS_DELETED ]);
     }
 
     /**
@@ -157,5 +166,13 @@ class User extends ActiveRecord implements IdentityInterface
     /** Generates "remember me" authentication key */
     public function generateAuthKey() {
         $this->auth_key = Yii::$app->security->generateRandomString();
+    }
+
+    public static function findOne($condition) {
+        $id = $condition['id'];
+        if ( !Yii::$app->cache->exists(self::class . '_' . $id ) ) {
+            return parent::findOne($condition);
+        }
+        return Yii::$app->cache->get(self::class . '_' . $id);
     }
 }
