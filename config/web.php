@@ -83,8 +83,13 @@ $config = [
             ],
         ],
         'authManager' => [
-            'class' => \yii\rbac\DbManager::class
-        ]
+            'class' => \yii\rbac\DbManager::class,
+        ],
+    ],
+    'modules' => [
+        'admin' => [
+            'class' => 'app\modules\admin\Admin',
+        ],
     ],
     'params' => $params,
 ];
