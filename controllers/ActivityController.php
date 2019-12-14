@@ -16,6 +16,7 @@ class ActivityController extends BaseController {
      * @return string возвращает вид
     */
     public function actionIndex() {
+        var_dump(Yii::$app->user->can('admin')); die();
         $searchModel = new ActivitySearch();
         $query = Yii::$app->request->queryParams;
         $dataProvider = $searchModel->search( $query, true );
@@ -122,31 +123,6 @@ class ActivityController extends BaseController {
                 'durationEditable' => true,
             ]);
         }
-
         return $calendarEvents;
     }
-
-//    public function actionEvents($id, $start, $end)
-//    {
-//        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-//        $calendarsSearch = new CalendarSearch();
-//        $calendars = $calendarsSearch->searchFromCache(['start'=>$start, 'end'=>$end]);
-//        $result = [];
-//        foreach ($calendars->models as $calendar) {
-//            /** @var Calendar  $calendar */
-//            $activity = $calendar->activity;
-//            $result[] = new Event([
-//                'id' => $activity->id,
-//                'title' => $activity->title,
-//                'start' => Yii::$app->formatter->asDatetime($activity->started_at, 'php:c'),
-//                'end' => Yii::$app->formatter->asDatetime($activity->finished_at, 'php:c'),
-//                'editable' => false,
-//                'startEditable' => false,
-//                'durationEditable' => false,
-//                'color' => 'red',
-//                'url' => Url::to(['activity/view', 'id' => $activity->id])
-//            ]);
-//        }
-//        return $result;
-//    }
 }
