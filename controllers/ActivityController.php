@@ -95,30 +95,58 @@ class ActivityController extends BaseController {
     /**
      * Получение списка активностей для календаря для конкретного пользователя
      * @param int $userId
+     * @param $start
+     * @param $end
      * @return array
      *
      * @throws \yii\base\InvalidConfigException
      */
-    public function actionEvents( int $userId ) {
+    public function actionEvents( int $userId, $start, $end ) {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $activitiesList = Activity::findAll([ 'author_id' => $userId ]);
+        $activities = (new ActivitySearch())->search([
+            'author_id' => $userId,
+            'minDate' => $start, 'maxDate' => $end
+        ], true );
         $calendarEvents = [];
 
-        if ( $activitiesList && is_array($activitiesList) && count( $activitiesList )) {
-            foreach ( $activitiesList as $activity ) {
-                $calendarEvents[] = new Event([
-                    'id' => $activity->id,
-                    'title' => $activity->name,
-                    'start' => Yii::$app->formatter->asDatetime($activity->started_at, 'php:Y-m-d H:i:s' ),
-                    'end' =>  Yii::$app->formatter->asDatetime($activity->finished_at, 'php:Y-m-d H:i:s' ),
-                    'color' => 'green',
-                    'url' => Url::to(['activity/'.$activity->id ]),
-                    'editable'         => true,
-                    'startEditable'    => true,
-                    'durationEditable' => true,
-                ]);
-            }
+        foreach ( $activities->models as $activity ) {
+            $calendarEvents[] = new Event([
+                'id' => $activity->id,
+                'title' => $activity->name,
+                'start' => Yii::$app->formatter->asDatetime($activity->started_at, 'php:Y-m-d H:i:s' ),
+                'end' =>  Yii::$app->formatter->asDatetime($activity->finished_at, 'php:Y-m-d H:i:s' ),
+                'color' => 'green',
+                'url' => Url::to(['activity/'.$activity->id ]),
+                'editable'         => true,
+                'startEditable'    => true,
+                'durationEditable' => true,
+            ]);
         }
+
         return $calendarEvents;
     }
+
+//    public function actionEvents($id, $start, $end)
+//    {
+//        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+//        $calendarsSearch = new CalendarSearch();
+//        $calendars = $calendarsSearch->searchFromCache(['start'=>$start, 'end'=>$end]);
+//        $result = [];
+//        foreach ($calendars->models as $calendar) {
+//            /** @var Calendar  $calendar */
+//            $activity = $calendar->activity;
+//            $result[] = new Event([
+//                'id' => $activity->id,
+//                'title' => $activity->title,
+//                'start' => Yii::$app->formatter->asDatetime($activity->started_at, 'php:c'),
+//                'end' => Yii::$app->formatter->asDatetime($activity->finished_at, 'php:c'),
+//                'editable' => false,
+//                'startEditable' => false,
+//                'durationEditable' => false,
+//                'color' => 'red',
+//                'url' => Url::to(['activity/view', 'id' => $activity->id])
+//            ]);
+//        }
+//        return $result;
+//    }
 }
