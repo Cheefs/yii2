@@ -11,10 +11,13 @@ use app\models\Activity;
 class ActivitySearch extends Activity
 {
     public $author;
+    public $minDate;
+    public $maxDate;
+
     public function rules() {
         return [
             [['id', 'started_at', 'finished_at', 'is_main', 'is_repeatable', 'created_at', 'updated_at'], 'integer'],
-            [['name', 'desc', 'author'], 'safe'],
+            [['name', 'desc', 'author', 'minDate', 'maxDate'], 'safe'],
         ];
     }
 
@@ -50,6 +53,16 @@ class ActivitySearch extends Activity
             ->andFilterWhere(['like', 'desc', $this->desc ])
             ->andFilterWhere(['like', 'name', $this->name ]);
         }
+
+        if ( $this->minDate && $this->maxDate ) {
+            $query->andWhere([
+                'or',
+                ['between', 'activity.finished_at', $this->minDate, $this->maxDate],
+                ['between', 'activity.started_at', $this->minDate, $this->maxDate]
+            ]);
+        }
+
+
         if ( !$forCurrentUser && $this->author ) {
             $query->joinWith('author as author')
                   ->andWhere(['like', 'author.username', $this->author ]);

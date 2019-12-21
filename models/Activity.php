@@ -24,13 +24,9 @@ use yii\db\ActiveRecord;
  * @property mixed $author
  * @property Calendar[] $calendars
  */
-class Activity extends \yii\db\ActiveRecord
+class Activity extends ActiveRecord
 {
-    //2) Форматы дат могут меняться, поэтому хранить их в коде не лучшая идея. Вынесите форматы дат в конфигурацию.
-    // Помните, что захламлять один файл web плохо. ??? ( постановка задачи странная, и непонятная , поэтому задал формат даты в форме,
-    // а пользователю дату формирует виджет, надеюсь правильно понял )
     const DATE_FORMAT_FOR_DATE_PICKER = 'dd-mm-yyyy';
-    const DATE_FORMAT_FOR_FORMATTER = 'php:d-m-Y h:i';
 
     const NOT_MAIN_ACTIVITY = 0;
     /**
@@ -110,7 +106,7 @@ class Activity extends \yii\db\ActiveRecord
      */
     public function afterFind() {
         parent::afterFind();
-        $this->started_at = Yii::$app->formatter->asDatetime( $this->started_at, self::DATE_FORMAT_FOR_FORMATTER );
-        $this->finished_at = $this->finished_at ? Yii::$app->formatter->asDatetime( $this->finished_at, self::DATE_FORMAT_FOR_FORMATTER  ) : null;
+        $this->started_at = Yii::$app->formatter->asDatetime( $this->started_at );
+        $this->finished_at = $this->finished_at ? Yii::$app->formatter->asDatetime( $this->finished_at ) : null;
     }
 }

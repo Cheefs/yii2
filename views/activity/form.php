@@ -5,10 +5,10 @@ use kartik\datetime\DateTimePicker;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
-
+$action = Yii::$app->controller->action->id;
 ?>
 
-<h1 class="text-center"><?= Yii::t('app', 'create new activity') ?></h1>
+<h1 class="text-center"><?= Yii::t('app',  "$action activity") ?></h1>
 <?php $form = ActiveForm::begin([
     'id' => 'create-form',
     'options' => [ 'enctype' => 'multipart/form-data' ]

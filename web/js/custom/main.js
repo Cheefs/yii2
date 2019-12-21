@@ -1,0 +1,1 @@
+console.log('%c custom assets loaded', 'font-size: 14px; color: red;');

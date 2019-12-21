@@ -21,7 +21,12 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
+
     'components' => [
+        'formatter' => [
+            'dateFormat' => 'php:d-m-Y',
+            'datetimeFormat' => 'php:d-m-Y H:i:s',
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'qkI5AYFHa0QCmg67UROZd5D_T_yIgBSx',
@@ -79,7 +84,8 @@ $config = [
                 'account' => 'user/profile',
                 'account/update' => 'user/update',
                 'calendar' => 'user/calendar',
-                'tasks' => 'user/tasks'
+                'tasks' => 'user/tasks',
+                'activity/<id:\d+>' => 'activity/view',
             ],
         ],
         'authManager' => [
